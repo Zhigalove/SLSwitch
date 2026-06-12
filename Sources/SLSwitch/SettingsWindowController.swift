@@ -1,7 +1,6 @@
 import AppKit
 
 protocol SettingsWindowControllerDelegate: AnyObject {
-    func settingsWindowControllerAccessibilityStatus(_ controller: SettingsWindowController) -> Bool
     func settingsWindowControllerRequestAccessibility(_ controller: SettingsWindowController)
     func settingsWindowControllerSelectedShortcutID(_ controller: SettingsWindowController) -> String
     func settingsWindowController(_ controller: SettingsWindowController, didSelectShortcutID shortcutID: String)
@@ -20,7 +19,6 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
     private let shortcuts: [ModifierShortcut]
     private weak var settingsDelegate: SettingsWindowControllerDelegate?
 
-    private let accessibilityStatusLabel = NSTextField(labelWithString: "")
     private let accessibilityButton = NSButton(title: L10n.string("settings.enable_accessibility"), target: nil, action: nil)
     private let shortcutPopup = NSPopUpButton()
     private let launchAtLoginCheckbox = NSButton(checkboxWithTitle: L10n.string("settings.launch_at_login"), target: nil, action: nil)
@@ -57,13 +55,6 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
 
     func refresh() {
         guard let settingsDelegate else { return }
-
-        let accessibilityGranted = settingsDelegate.settingsWindowControllerAccessibilityStatus(self)
-        accessibilityStatusLabel.stringValue = accessibilityGranted
-            ? L10n.string("settings.accessibility_granted")
-            : L10n.string("settings.accessibility_not_granted")
-        accessibilityStatusLabel.textColor = accessibilityGranted ? .systemGreen : .systemRed
-        accessibilityButton.isEnabled = !accessibilityGranted
 
         let selectedShortcutID = settingsDelegate.settingsWindowControllerSelectedShortcutID(self)
         if let item = shortcutPopup.itemArray.first(where: { $0.representedObject as? String == selectedShortcutID }) {
@@ -156,7 +147,6 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
         let label = NSTextField(labelWithString: L10n.string("settings.universal_access"))
         label.font = .systemFont(ofSize: 13, weight: .semibold)
         stack.addArrangedSubview(label)
-        stack.addArrangedSubview(accessibilityStatusLabel)
         stack.addArrangedSubview(accessibilityButton)
 
         return stack

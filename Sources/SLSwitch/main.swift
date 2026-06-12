@@ -1,6 +1,6 @@
 import AppKit
-import ApplicationServices
 import Foundation
+import Sparkle
 
 private enum LaunchMode {
     case automatic
@@ -28,7 +28,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let shortcutDefaultsKey = "activeShortcutID"
     private let showStatusItemDefaultsKey = "showStatusItem"
     private let setupCompletedDefaultsKey = "setupCompleted"
-    private let lastUpdateCheckDefaultsKey = "lastUpdateCheckDate"
     private let shortcuts = [
         ModifierShortcut(id: "shift-command", name: "Shift + Command", flags: [.shift, .command]),
         ModifierShortcut(id: "shift-option", name: "Shift + Option", flags: [.shift, .option]),
@@ -36,13 +35,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     ]
     private var statusItem: NSStatusItem?
     private let inputSourceController = InputSourceController()
-    private let updateController = GitHubUpdateController()
-    private var hotKeyRetryTimer: Timer?
+    private let updaterController = SPUStandardUpdaterController(
+        startingUpdater: true,
+        updaterDelegate: nil,
+        userDriverDelegate: nil
+    )
     private var statusRefreshTimer: Timer?
     private var settingsWindowController: SettingsWindowController?
-    private var lastKnownAccessibilityStatus: Bool?
     private var lastKnownHotKeyRunningStatus: Bool?
-    private var isCheckingForUpdates = false
     private lazy var hotKeyMonitor = ModifierHotKeyMonitor(
         activeShortcut: activeShortcut,
         onTrigger: { [weak self] shortcut in
@@ -58,9 +58,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         applyStatusItemVisibility()
         startStatusRefreshTimer()
-        startHotKeyMonitorIfPossible()
-        scheduleHotKeyRetryIfNeeded()
-        checkForUpdatesAutomaticallyIfNeeded()
+        startHotKeyMonitor()
 
         if startsInBackground {
             updateMenu()
@@ -70,7 +68,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationWillTerminate(_ notification: Notification) {
-        hotKeyRetryTimer?.invalidate()
         statusRefreshTimer?.invalidate()
         hotKeyMonitor.stop()
     }
@@ -115,7 +112,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem(title: L10n.format("menu.version", AppVersion.short), action: nil, keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: L10n.format("menu.current_source", inputSourceController.currentSourceName()), action: nil, keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: L10n.format("menu.active_shortcut", activeShortcut.name), action: nil, keyEquivalent: ""))
-        menu.addItem(NSMenuItem(title: accessibilityStatusTitle(), action: nil, keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: hotKeyStatusTitle(), action: nil, keyEquivalent: ""))
         menu.addItem(NSMenuItem.separator())
 
@@ -179,16 +175,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusRefreshTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self else { return }
 
-            let accessibilityGranted = AccessibilityPermissions.isTrusted(prompt: false)
-            if accessibilityGranted, !self.hotKeyMonitor.isRunning {
-                self.startHotKeyMonitorIfPossible()
-            }
-
             let hotKeyRunning = self.hotKeyMonitor.isRunning
-            let statusChanged = accessibilityGranted != self.lastKnownAccessibilityStatus
-                || hotKeyRunning != self.lastKnownHotKeyRunningStatus
+            let statusChanged = hotKeyRunning != self.lastKnownHotKeyRunningStatus
 
-            self.lastKnownAccessibilityStatus = accessibilityGranted
             self.lastKnownHotKeyRunningStatus = hotKeyRunning
 
             if self.settingsWindowController?.window?.isVisible == true {
@@ -201,29 +190,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    private func scheduleHotKeyRetryIfNeeded() {
-        guard !hotKeyMonitor.isRunning, hotKeyRetryTimer == nil else { return }
-
-        hotKeyRetryTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] timer in
-            guard let self else {
-                timer.invalidate()
-                return
-            }
-
-            guard AccessibilityPermissions.isTrusted(prompt: false) else { return }
-
-            self.startHotKeyMonitorIfPossible()
-            if self.hotKeyMonitor.isRunning {
-                timer.invalidate()
-                self.hotKeyRetryTimer = nil
-                self.updateMenu()
-            }
-        }
-    }
-
-    private func startHotKeyMonitorIfPossible() {
-        guard AccessibilityPermissions.isTrusted(prompt: false) else { return }
-
+    private func startHotKeyMonitor() {
         hotKeyMonitor.restart()
     }
 
@@ -281,125 +248,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         return L10n.string("menu.launch_at_login")
     }
 
-    private func accessibilityStatusTitle() -> String {
-        AccessibilityPermissions.isTrusted(prompt: false)
-            ? L10n.string("status.accessibility_granted")
-            : L10n.string("status.accessibility_not_granted")
-    }
-
     private func hotKeyStatusTitle() -> String {
-        if !AccessibilityPermissions.isTrusted(prompt: false) {
-            return L10n.string("status.hotkeys_needs_accessibility")
-        }
-
         return hotKeyMonitor.isRunning
             ? L10n.string("status.hotkeys_active")
             : L10n.string("status.hotkeys_reconnecting")
     }
 
     private func updateMenu() {
-        lastKnownAccessibilityStatus = AccessibilityPermissions.isTrusted(prompt: false)
         lastKnownHotKeyRunningStatus = hotKeyMonitor.isRunning
         statusItem?.menu = makeMenu()
     }
 
-    private func checkForUpdatesAutomaticallyIfNeeded() {
-        if let lastCheck = UserDefaults.standard.object(forKey: lastUpdateCheckDefaultsKey) as? Date,
-           Date().timeIntervalSince(lastCheck) < 12 * 60 * 60 {
-            return
-        }
-
-        checkForUpdates(userInitiated: false)
-    }
-
-    private func checkForUpdates(userInitiated: Bool) {
-        guard !isCheckingForUpdates else { return }
-
-        isCheckingForUpdates = true
-        UserDefaults.standard.set(Date(), forKey: lastUpdateCheckDefaultsKey)
-
-        updateController.checkForUpdates { [weak self] result in
-            DispatchQueue.main.async {
-                guard let self else { return }
-                self.isCheckingForUpdates = false
-
-                switch result {
-                case .success(.upToDate):
-                    if userInitiated {
-                        self.showUpdateMessage(
-                            title: L10n.string("updates.up_to_date.title"),
-                            message: L10n.format("updates.up_to_date.message", AppVersion.display)
-                        )
-                    }
-                case .success(.available(let release)):
-                    if userInitiated {
-                        self.showUpdateAvailableAlert(release)
-                    } else {
-                        UserNotificationPresenter.shared.show(message: L10n.format("updates.available.notification", release.version))
-                    }
-                case .failure(let error):
-                    if userInitiated {
-                        self.showUpdateMessage(
-                            title: L10n.string("updates.check_failed.title"),
-                            message: error.localizedDescription
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    private func showUpdateAvailableAlert(_ release: GitHubRelease) {
-        let alert = NSAlert()
-        alert.messageText = L10n.format("updates.available.title", release.version)
-        alert.informativeText = L10n.format("updates.available.message", AppVersion.short)
-        alert.alertStyle = .informational
-        alert.addButton(withTitle: L10n.string("updates.button.download"))
-        alert.addButton(withTitle: L10n.string("updates.button.open_release_page"))
-        alert.addButton(withTitle: L10n.string("updates.button.later"))
-
-        switch alert.runModal() {
-        case .alertFirstButtonReturn:
-            downloadAndOpenInstaller(for: release)
-        case .alertSecondButtonReturn:
-            NSWorkspace.shared.open(release.pageURL)
-        default:
-            break
-        }
-    }
-
-    private func downloadAndOpenInstaller(for release: GitHubRelease) {
-        updateController.downloadInstaller(for: release) { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let installerURL):
-                    NSWorkspace.shared.open(installerURL)
-                case .failure(let error):
-                    self?.showUpdateMessage(
-                        title: L10n.string("updates.download_failed.title"),
-                        message: error.localizedDescription
-                    )
-                }
-            }
-        }
-    }
-
-    private func showUpdateMessage(title: String, message: String) {
-        let alert = NSAlert()
-        alert.messageText = title
-        alert.informativeText = message
-        alert.alertStyle = .informational
-        alert.addButton(withTitle: L10n.string("common.ok"))
-        alert.runModal()
-    }
-
     private func handleTrigger(shortcut: ModifierShortcut) {
-        guard AccessibilityPermissions.isTrusted(prompt: false) else {
-            AccessibilityPermissions.requestPermission()
-            NSSound.beep()
-            return
-        }
-
         inputSourceController.selectNextSource()
         updateMenu()
         UserNotificationPresenter.shared.show(message: L10n.format("notification.switched_by", shortcut.name))
@@ -423,9 +283,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func requestAccessibilityPermission() {
-        AccessibilityPermissions.requestPermission()
-        startHotKeyMonitorIfPossible()
-        scheduleHotKeyRetryIfNeeded()
+        AccessibilityPermissions.openSettings()
+        startHotKeyMonitor()
         updateMenu()
     }
 
@@ -464,13 +323,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func refreshMenu() {
-        startHotKeyMonitorIfPossible()
-        scheduleHotKeyRetryIfNeeded()
+        startHotKeyMonitor()
         updateMenu()
     }
 
     @objc private func checkForUpdatesFromMenu() {
-        checkForUpdates(userInitiated: true)
+        updaterController.checkForUpdates(nil)
     }
 
     @objc private func quitApp() {
@@ -479,10 +337,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 }
 
 extension AppDelegate: SettingsWindowControllerDelegate {
-    func settingsWindowControllerAccessibilityStatus(_ controller: SettingsWindowController) -> Bool {
-        AccessibilityPermissions.isTrusted(prompt: false)
-    }
-
     func settingsWindowControllerRequestAccessibility(_ controller: SettingsWindowController) {
         requestAccessibilityPermission()
     }
@@ -531,14 +385,13 @@ extension AppDelegate: SettingsWindowControllerDelegate {
     }
 
     func settingsWindowControllerCheckForUpdates(_ controller: SettingsWindowController) {
-        checkForUpdates(userInitiated: true)
+        updaterController.checkForUpdates(nil)
     }
 
     func settingsWindowControllerStartApp(_ controller: SettingsWindowController) {
         UserDefaults.standard.set(true, forKey: setupCompletedDefaultsKey)
         applyStatusItemVisibility()
-        startHotKeyMonitorIfPossible()
-        scheduleHotKeyRetryIfNeeded()
+        startHotKeyMonitor()
         updateMenu()
         controller.close()
     }
