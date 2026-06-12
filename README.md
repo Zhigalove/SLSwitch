@@ -21,6 +21,26 @@ SLSwitch is a small native macOS utility for switching keyboard input sources wi
 
 Download `SLSwitch-Installer.dmg`, drag `SLSwitch.app` to `Applications`, then grant Accessibility access for `SLSwitch.app`.
 
+## First Launch
+
+Current public builds are not notarized by Apple, so macOS may show a security warning the first time you open SLSwitch.
+
+Use one of the standard macOS approval flows:
+
+1. Right-click `SLSwitch.app` in `Applications`.
+2. Choose `Open`.
+3. Confirm that you want to open the app.
+
+If macOS does not show the confirmation button, open `System Settings` -> `Privacy & Security` and use `Open Anyway` for SLSwitch.
+
+Advanced users can remove the quarantine flag for this app only:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/SLSwitch.app
+```
+
+Use this command only for builds downloaded from the official `Zhigalove/SLSwitch` GitHub releases. Do not disable Gatekeeper globally.
+
 Accessibility permission is preserved across updates only when releases are signed with the same Developer ID identity and the app stays at the same bundle path, usually `/Applications/SLSwitch.app`.
 
 ## Build
