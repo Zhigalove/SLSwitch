@@ -6,10 +6,8 @@ SLSwitch is a small native macOS utility for switching keyboard input sources wi
 
 ## Features
 
-- Windows-style language switching on macOS.
-- Modifier-only shortcuts that feel natural during typing.
-- Lightweight background app with an optional status bar icon.
-- GitHub Releases-based updates from inside the app.
+- Switch macOS input sources with familiar Windows-style shortcuts.
+- Choose one of three shortcuts: `Shift + Command`, `Shift + Option`, or `Shift + Control`.
 
 ## Requirements
 
@@ -41,8 +39,6 @@ xattr -dr com.apple.quarantine /Applications/SLSwitch.app
 
 Use this command only for builds downloaded from the official `Zhigalove/SLSwitch` GitHub releases. Do not disable Gatekeeper globally.
 
-Accessibility permission is preserved across updates only when releases are signed with the same Developer ID identity and the app stays at the same bundle path, usually `/Applications/SLSwitch.app`.
-
 ## Build
 
 ```bash
@@ -66,19 +62,3 @@ The installer is created at:
 ```text
 build/SLSwitch-Installer.dmg
 ```
-
-## Releases and Updates
-
-Each GitHub release should include the DMG installer:
-
-```text
-SLSwitch-Installer.dmg
-```
-
-Use version tags like `v0.1.1`. The app checks the latest GitHub release, compares the tag with `CFBundleShortVersionString`, and downloads the attached DMG when an update is available.
-
-## Notes
-
-- SLSwitch cycles through selectable input sources configured in macOS.
-- Modifier-only shortcuts can conflict with macOS system shortcuts if the same combination is enabled in Keyboard Shortcuts.
-- Local builds are ad-hoc signed. Public distribution should use Developer ID signing and notarization; otherwise macOS may require Accessibility permission again after an update.
