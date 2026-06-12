@@ -1,0 +1,32 @@
+"app.name" = "SLSwitch";
+"common.ok" = "Tamam";
+"common.unknown" = "Bilinmiyor";
+"version.format" = "Sürüm %@ (%@)";
+
+"menu.version" = "SLSwitch %@";
+"menu.current_source" = "Geçerli dil: %@";
+"menu.active_shortcut" = "Etkin kısayol: %@";
+"menu.settings" = "Ayarlar...";
+"menu.switch_input_source" = "Dili değiştir";
+"menu.active_shortcut_title" = "Etkin kısayol";
+"menu.launch_at_login" = "Girişte başlat";
+"menu.launch_at_login_approval_needed" = "Girişte başlat (onay gerekli)";
+"menu.show_status_icon" = "Menü çubuğu simgesini göster";
+"menu.open_accessibility_settings" = "Erişilebilirlik ayarlarını aç";
+"menu.refresh" = "Menüyü yenile";
+"menu.check_updates" = "Güncellemeleri denetle...";
+"menu.quit" = "Çık";
+
+"status.hotkeys_active" = "Kısayollar: etkin";
+"status.hotkeys_reconnecting" = "Kısayollar: yeniden bağlanıyor";
+
+"settings.enable_accessibility" = "Erişilebilirliği aç";
+"settings.launch_at_login" = "Girişte başlat";
+"settings.show_status_icon" = "Menü çubuğu simgesini göster";
+"settings.check_updates" = "Güncellemeleri denetle";
+"settings.quit" = "Çık";
+"settings.start" = "Başlat";
+"settings.universal_access" = "Erişilebilirlik";
+"settings.shortcut" = "Klavye kısayolu";
+
+"notification.switched_by" = "%@ ile değiştirildi";

@@ -6,15 +6,15 @@
     <description>Updates for SLSwitch</description>
     <language>en</language>
     <item>
-      <title>SLSwitch 0.1.2</title>
-      <sparkle:version>3</sparkle:version>
-      <sparkle:shortVersionString>0.1.2</sparkle:shortVersionString>
+      <title>SLSwitch 0.1.3</title>
+      <sparkle:version>4</sparkle:version>
+      <sparkle:shortVersionString>0.1.3</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-      <pubDate>Fri, 12 Jun 2026 07:20:00 +0000</pubDate>
+      <pubDate>Fri, 12 Jun 2026 07:31:47 +0000</pubDate>
       <enclosure
-        url="https://github.com/Zhigalove/SLSwitch/releases/download/v0.1.2/SLSwitch-Installer.dmg"
-        sparkle:edSignature="tR9laOU47UN3y4lsGgc4MMYLAiXv5Pn/EM1vIeaE4oIVcjWMDLeAdDhKuq5fqKAK0VCYj/qepODxQxs6+ZRjBA=="
-        length="2084336"
+        url="https://github.com/Zhigalove/SLSwitch/releases/download/v0.1.3/SLSwitch-Installer.dmg"
+        sparkle:edSignature="JC7Q+scKox2BbLs9Gw96s5LuyuF04hRLcv1U6Ilatlnzkn9kxfRt0zLHTJEC4FHSG+wNn4zOdHUQtjPSO/PQBQ=="
+        length="2087287"
         type="application/x-apple-diskimage" />
     </item>
   </channel>

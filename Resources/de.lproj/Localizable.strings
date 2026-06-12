@@ -1,0 +1,32 @@
+"app.name" = "SLSwitch";
+"common.ok" = "OK";
+"common.unknown" = "Unbekannt";
+"version.format" = "Version %@ (%@)";
+
+"menu.version" = "SLSwitch %@";
+"menu.current_source" = "Aktuelle Sprache: %@";
+"menu.active_shortcut" = "Aktives Tastenkürzel: %@";
+"menu.settings" = "Einstellungen...";
+"menu.switch_input_source" = "Sprache wechseln";
+"menu.active_shortcut_title" = "Aktives Tastenkürzel";
+"menu.launch_at_login" = "Beim Anmelden starten";
+"menu.launch_at_login_approval_needed" = "Beim Anmelden starten (Bestätigung nötig)";
+"menu.show_status_icon" = "Symbol in der Menüleiste anzeigen";
+"menu.open_accessibility_settings" = "Bedienungshilfen öffnen";
+"menu.refresh" = "Menü aktualisieren";
+"menu.check_updates" = "Nach Updates suchen...";
+"menu.quit" = "Beenden";
+
+"status.hotkeys_active" = "Tastenkürzel: aktiv";
+"status.hotkeys_reconnecting" = "Tastenkürzel: verbindet neu";
+
+"settings.enable_accessibility" = "Bedienungshilfen aktivieren";
+"settings.launch_at_login" = "Beim Anmelden starten";
+"settings.show_status_icon" = "Symbol in der Menüleiste anzeigen";
+"settings.check_updates" = "Nach Updates suchen";
+"settings.quit" = "Beenden";
+"settings.start" = "Starten";
+"settings.universal_access" = "Bedienungshilfen";
+"settings.shortcut" = "Tastenkürzel";
+
+"notification.switched_by" = "Gewechselt mit %@";

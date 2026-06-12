@@ -1,0 +1,32 @@
+"app.name" = "SLSwitch";
+"common.ok" = "OK";
+"common.unknown" = "Nieznane";
+"version.format" = "Wersja %@ (%@)";
+
+"menu.version" = "SLSwitch %@";
+"menu.current_source" = "Bieżący język: %@";
+"menu.active_shortcut" = "Aktywny skrót: %@";
+"menu.settings" = "Ustawienia...";
+"menu.switch_input_source" = "Przełącz język";
+"menu.active_shortcut_title" = "Aktywny skrót";
+"menu.launch_at_login" = "Uruchamiaj po zalogowaniu";
+"menu.launch_at_login_approval_needed" = "Uruchamianie po zalogowaniu (wymaga zgody)";
+"menu.show_status_icon" = "Pokaż ikonę na pasku menu";
+"menu.open_accessibility_settings" = "Otwórz ustawienia dostępności";
+"menu.refresh" = "Odśwież menu";
+"menu.check_updates" = "Sprawdź aktualizacje...";
+"menu.quit" = "Zakończ";
+
+"status.hotkeys_active" = "Skróty: aktywne";
+"status.hotkeys_reconnecting" = "Skróty: ponowne łączenie";
+
+"settings.enable_accessibility" = "Włącz dostępność";
+"settings.launch_at_login" = "Uruchamiaj po zalogowaniu";
+"settings.show_status_icon" = "Pokaż ikonę na pasku menu";
+"settings.check_updates" = "Sprawdź aktualizacje";
+"settings.quit" = "Zakończ";
+"settings.start" = "Uruchom";
+"settings.universal_access" = "Dostępność";
+"settings.shortcut" = "Skrót klawiszowy";
+
+"notification.switched_by" = "Przełączono przez %@";
