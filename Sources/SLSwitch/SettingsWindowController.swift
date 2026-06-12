@@ -21,14 +21,14 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
     private weak var settingsDelegate: SettingsWindowControllerDelegate?
 
     private let accessibilityStatusLabel = NSTextField(labelWithString: "")
-    private let accessibilityButton = NSButton(title: "Enable Accessibility Access", target: nil, action: nil)
+    private let accessibilityButton = NSButton(title: L10n.string("settings.enable_accessibility"), target: nil, action: nil)
     private let shortcutPopup = NSPopUpButton()
-    private let launchAtLoginCheckbox = NSButton(checkboxWithTitle: "Launch at login", target: nil, action: nil)
-    private let showStatusItemCheckbox = NSButton(checkboxWithTitle: "Show status bar icon", target: nil, action: nil)
+    private let launchAtLoginCheckbox = NSButton(checkboxWithTitle: L10n.string("settings.launch_at_login"), target: nil, action: nil)
+    private let showStatusItemCheckbox = NSButton(checkboxWithTitle: L10n.string("settings.show_status_icon"), target: nil, action: nil)
     private let versionLabel = NSTextField(labelWithString: "")
-    private let updateButton = NSButton(title: "Check for Updates", target: nil, action: nil)
-    private let quitButton = NSButton(title: "Quit", target: nil, action: nil)
-    private let launchButton = NSButton(title: "Start", target: nil, action: nil)
+    private let updateButton = NSButton(title: L10n.string("settings.check_updates"), target: nil, action: nil)
+    private let quitButton = NSButton(title: L10n.string("settings.quit"), target: nil, action: nil)
+    private let launchButton = NSButton(title: L10n.string("settings.start"), target: nil, action: nil)
 
     init(shortcuts: [ModifierShortcut], delegate: SettingsWindowControllerDelegate) {
         self.shortcuts = shortcuts
@@ -40,7 +40,7 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
             backing: .buffered,
             defer: false
         )
-        window.title = "SLSwitch"
+        window.title = L10n.string("app.name")
         window.center()
         window.isReleasedWhenClosed = false
 
@@ -60,8 +60,8 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
 
         let accessibilityGranted = settingsDelegate.settingsWindowControllerAccessibilityStatus(self)
         accessibilityStatusLabel.stringValue = accessibilityGranted
-            ? "Accessibility access is granted"
-            : "Accessibility access is not granted"
+            ? L10n.string("settings.accessibility_granted")
+            : L10n.string("settings.accessibility_not_granted")
         accessibilityStatusLabel.textColor = accessibilityGranted ? .systemGreen : .systemRed
         accessibilityButton.isEnabled = !accessibilityGranted
 
@@ -92,7 +92,7 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
             root.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24),
         ])
 
-        let titleLabel = NSTextField(labelWithString: "SLSwitch")
+        let titleLabel = NSTextField(labelWithString: L10n.string("app.name"))
         titleLabel.font = .systemFont(ofSize: 22, weight: .semibold)
         root.addArrangedSubview(titleLabel)
 
@@ -153,7 +153,7 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
         stack.alignment = .leading
         stack.spacing = 8
 
-        let label = NSTextField(labelWithString: "Universal Access")
+        let label = NSTextField(labelWithString: L10n.string("settings.universal_access"))
         label.font = .systemFont(ofSize: 13, weight: .semibold)
         stack.addArrangedSubview(label)
         stack.addArrangedSubview(accessibilityStatusLabel)
@@ -188,7 +188,7 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
         stack.alignment = .leading
         stack.spacing = 8
 
-        let label = NSTextField(labelWithString: "Shortcut")
+        let label = NSTextField(labelWithString: L10n.string("settings.shortcut"))
         label.font = .systemFont(ofSize: 13, weight: .semibold)
         stack.addArrangedSubview(label)
 

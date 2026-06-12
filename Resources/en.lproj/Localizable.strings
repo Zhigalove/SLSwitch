@@ -1,0 +1,50 @@
+"app.name" = "SLSwitch";
+"common.ok" = "OK";
+"common.unknown" = "Unknown";
+"version.format" = "Version %@ (%@)";
+
+"menu.version" = "SLSwitch %@";
+"menu.current_source" = "Current: %@";
+"menu.active_shortcut" = "Active Shortcut: %@";
+"menu.settings" = "Settings...";
+"menu.switch_input_source" = "Switch Input Source";
+"menu.active_shortcut_title" = "Active Shortcut";
+"menu.launch_at_login" = "Launch at Login";
+"menu.launch_at_login_approval_needed" = "Launch at Login (Approval Needed)";
+"menu.show_status_icon" = "Show Status Bar Icon";
+"menu.open_accessibility_settings" = "Open Accessibility Settings";
+"menu.refresh" = "Refresh Menu";
+"menu.check_updates" = "Check for Updates...";
+"menu.quit" = "Quit";
+
+"status.accessibility_granted" = "Accessibility: Granted";
+"status.accessibility_not_granted" = "Accessibility: Not Granted";
+"status.hotkeys_needs_accessibility" = "Hotkeys: Needs Accessibility Permission";
+"status.hotkeys_active" = "Hotkeys: Active";
+"status.hotkeys_reconnecting" = "Hotkeys: Reconnecting";
+
+"settings.enable_accessibility" = "Enable Accessibility Access";
+"settings.launch_at_login" = "Launch at login";
+"settings.show_status_icon" = "Show status bar icon";
+"settings.check_updates" = "Check for Updates";
+"settings.quit" = "Quit";
+"settings.start" = "Start";
+"settings.accessibility_granted" = "Accessibility access is granted";
+"settings.accessibility_not_granted" = "Accessibility access is not granted";
+"settings.universal_access" = "Universal Access";
+"settings.shortcut" = "Shortcut";
+
+"updates.up_to_date.title" = "SLSwitch is up to date";
+"updates.up_to_date.message" = "You are running %@.";
+"updates.available.notification" = "SLSwitch %@ is available";
+"updates.check_failed.title" = "Update check failed";
+"updates.available.title" = "SLSwitch %@ is available";
+"updates.available.message" = "Current version: %@. Download the installer from GitHub Releases?";
+"updates.button.download" = "Download";
+"updates.button.open_release_page" = "Open Release Page";
+"updates.button.later" = "Later";
+"updates.download_failed.title" = "Download failed";
+"updates.error.empty_response" = "GitHub returned an empty response.";
+"updates.error.installer_missing" = "The latest GitHub release does not contain SLSwitch-Installer.dmg.";
+
+"notification.switched_by" = "Switched by %@";

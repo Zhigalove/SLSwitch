@@ -11,7 +11,7 @@ final class UserNotificationPresenter {
 
     func show(message: String) {
         let content = UNMutableNotificationContent()
-        content.title = "SLSwitch"
+        content.title = L10n.string("app.name")
         content.body = message
         content.sound = .default
 

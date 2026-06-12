@@ -10,6 +10,6 @@ enum AppVersion {
     }
 
     static var display: String {
-        "Version \(short) (\(build))"
+        L10n.format("version.format", short, build)
     }
 }

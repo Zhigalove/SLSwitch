@@ -146,9 +146,9 @@ private enum UpdateError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .emptyResponse:
-            return "GitHub returned an empty response."
+            return L10n.string("updates.error.empty_response")
         case .installerAssetMissing:
-            return "The latest GitHub release does not contain SLSwitch-Installer.dmg."
+            return L10n.string("updates.error.installer_missing")
         }
     }
 }

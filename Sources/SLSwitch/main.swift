@@ -112,22 +112,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func makeMenu() -> NSMenu {
         let menu = NSMenu()
-        menu.addItem(NSMenuItem(title: "SLSwitch \(AppVersion.short)", action: nil, keyEquivalent: ""))
-        menu.addItem(NSMenuItem(title: "Current: \(inputSourceController.currentSourceName())", action: nil, keyEquivalent: ""))
-        menu.addItem(NSMenuItem(title: "Active Shortcut: \(activeShortcut.name)", action: nil, keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: L10n.format("menu.version", AppVersion.short), action: nil, keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: L10n.format("menu.current_source", inputSourceController.currentSourceName()), action: nil, keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: L10n.format("menu.active_shortcut", activeShortcut.name), action: nil, keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: accessibilityStatusTitle(), action: nil, keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: hotKeyStatusTitle(), action: nil, keyEquivalent: ""))
         menu.addItem(NSMenuItem.separator())
 
-        let settingsItem = NSMenuItem(title: "Settings...", action: #selector(openSettingsWindow), keyEquivalent: "")
+        let settingsItem = NSMenuItem(title: L10n.string("menu.settings"), action: #selector(openSettingsWindow), keyEquivalent: "")
         settingsItem.target = self
         menu.addItem(settingsItem)
 
-        let switchItem = NSMenuItem(title: "Switch Input Source", action: #selector(switchInputSource), keyEquivalent: "")
+        let switchItem = NSMenuItem(title: L10n.string("menu.switch_input_source"), action: #selector(switchInputSource), keyEquivalent: "")
         switchItem.target = self
         menu.addItem(switchItem)
 
-        let shortcutItem = NSMenuItem(title: "Active Shortcut", action: nil, keyEquivalent: "")
+        let shortcutItem = NSMenuItem(title: L10n.string("menu.active_shortcut_title"), action: nil, keyEquivalent: "")
         shortcutItem.submenu = makeShortcutMenu()
         menu.addItem(shortcutItem)
 
@@ -136,26 +136,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         launchAtLoginItem.state = LaunchAtLoginController.isEnabled ? .on : .off
         menu.addItem(launchAtLoginItem)
 
-        let showStatusItem = NSMenuItem(title: "Show Status Bar Icon", action: #selector(toggleStatusItemVisibility), keyEquivalent: "")
+        let showStatusItem = NSMenuItem(title: L10n.string("menu.show_status_icon"), action: #selector(toggleStatusItemVisibility), keyEquivalent: "")
         showStatusItem.target = self
         showStatusItem.state = shouldShowStatusItem ? .on : .off
         menu.addItem(showStatusItem)
 
-        let permissionsItem = NSMenuItem(title: "Open Accessibility Settings", action: #selector(openAccessibilitySettings), keyEquivalent: "")
+        let permissionsItem = NSMenuItem(title: L10n.string("menu.open_accessibility_settings"), action: #selector(openAccessibilitySettings), keyEquivalent: "")
         permissionsItem.target = self
         menu.addItem(permissionsItem)
 
-        let refreshItem = NSMenuItem(title: "Refresh Menu", action: #selector(refreshMenu), keyEquivalent: "")
+        let refreshItem = NSMenuItem(title: L10n.string("menu.refresh"), action: #selector(refreshMenu), keyEquivalent: "")
         refreshItem.target = self
         menu.addItem(refreshItem)
 
-        let updateItem = NSMenuItem(title: "Check for Updates...", action: #selector(checkForUpdatesFromMenu), keyEquivalent: "")
+        let updateItem = NSMenuItem(title: L10n.string("menu.check_updates"), action: #selector(checkForUpdatesFromMenu), keyEquivalent: "")
         updateItem.target = self
         menu.addItem(updateItem)
 
         menu.addItem(NSMenuItem.separator())
 
-        let quitItem = NSMenuItem(title: "Quit", action: #selector(quitApp), keyEquivalent: "q")
+        let quitItem = NSMenuItem(title: L10n.string("menu.quit"), action: #selector(quitApp), keyEquivalent: "q")
         quitItem.target = self
         menu.addItem(quitItem)
 
@@ -275,24 +275,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func launchAtLoginTitle() -> String {
         if LaunchAtLoginController.needsApproval {
-            return "Launch at Login (Approval Needed)"
+            return L10n.string("menu.launch_at_login_approval_needed")
         }
 
-        return "Launch at Login"
+        return L10n.string("menu.launch_at_login")
     }
 
     private func accessibilityStatusTitle() -> String {
         AccessibilityPermissions.isTrusted(prompt: false)
-            ? "Accessibility: Granted"
-            : "Accessibility: Not Granted"
+            ? L10n.string("status.accessibility_granted")
+            : L10n.string("status.accessibility_not_granted")
     }
 
     private func hotKeyStatusTitle() -> String {
         if !AccessibilityPermissions.isTrusted(prompt: false) {
-            return "Hotkeys: Needs Accessibility Permission"
+            return L10n.string("status.hotkeys_needs_accessibility")
         }
 
-        return hotKeyMonitor.isRunning ? "Hotkeys: Active" : "Hotkeys: Reconnecting"
+        return hotKeyMonitor.isRunning
+            ? L10n.string("status.hotkeys_active")
+            : L10n.string("status.hotkeys_reconnecting")
     }
 
     private func updateMenu() {
@@ -325,20 +327,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 case .success(.upToDate):
                     if userInitiated {
                         self.showUpdateMessage(
-                            title: "SLSwitch is up to date",
-                            message: "You are running \(AppVersion.display)."
+                            title: L10n.string("updates.up_to_date.title"),
+                            message: L10n.format("updates.up_to_date.message", AppVersion.display)
                         )
                     }
                 case .success(.available(let release)):
                     if userInitiated {
                         self.showUpdateAvailableAlert(release)
                     } else {
-                        UserNotificationPresenter.shared.show(message: "SLSwitch \(release.version) is available")
+                        UserNotificationPresenter.shared.show(message: L10n.format("updates.available.notification", release.version))
                     }
                 case .failure(let error):
                     if userInitiated {
                         self.showUpdateMessage(
-                            title: "Update check failed",
+                            title: L10n.string("updates.check_failed.title"),
                             message: error.localizedDescription
                         )
                     }
@@ -349,12 +351,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func showUpdateAvailableAlert(_ release: GitHubRelease) {
         let alert = NSAlert()
-        alert.messageText = "SLSwitch \(release.version) is available"
-        alert.informativeText = "Current version: \(AppVersion.short). Download the installer from GitHub Releases?"
+        alert.messageText = L10n.format("updates.available.title", release.version)
+        alert.informativeText = L10n.format("updates.available.message", AppVersion.short)
         alert.alertStyle = .informational
-        alert.addButton(withTitle: "Download")
-        alert.addButton(withTitle: "Open Release Page")
-        alert.addButton(withTitle: "Later")
+        alert.addButton(withTitle: L10n.string("updates.button.download"))
+        alert.addButton(withTitle: L10n.string("updates.button.open_release_page"))
+        alert.addButton(withTitle: L10n.string("updates.button.later"))
 
         switch alert.runModal() {
         case .alertFirstButtonReturn:
@@ -374,7 +376,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     NSWorkspace.shared.open(installerURL)
                 case .failure(let error):
                     self?.showUpdateMessage(
-                        title: "Download failed",
+                        title: L10n.string("updates.download_failed.title"),
                         message: error.localizedDescription
                     )
                 }
@@ -387,7 +389,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         alert.messageText = title
         alert.informativeText = message
         alert.alertStyle = .informational
-        alert.addButton(withTitle: "OK")
+        alert.addButton(withTitle: L10n.string("common.ok"))
         alert.runModal()
     }
 
@@ -400,7 +402,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         inputSourceController.selectNextSource()
         updateMenu()
-        UserNotificationPresenter.shared.show(message: "Switched by \(shortcut.name)")
+        UserNotificationPresenter.shared.show(message: L10n.format("notification.switched_by", shortcut.name))
     }
 
     @objc private func switchInputSource() {

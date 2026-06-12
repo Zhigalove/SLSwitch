@@ -1,0 +1,50 @@
+"app.name" = "SLSwitch";
+"common.ok" = "ОК";
+"common.unknown" = "Неизвестно";
+"version.format" = "Версия %@ (%@)";
+
+"menu.version" = "SLSwitch %@";
+"menu.current_source" = "Текущий язык: %@";
+"menu.active_shortcut" = "Активное сочетание: %@";
+"menu.settings" = "Настройки...";
+"menu.switch_input_source" = "Переключить язык";
+"menu.active_shortcut_title" = "Активное сочетание";
+"menu.launch_at_login" = "Запускать при входе";
+"menu.launch_at_login_approval_needed" = "Запуск при входе (нужно подтверждение)";
+"menu.show_status_icon" = "Показывать иконку в статус-баре";
+"menu.open_accessibility_settings" = "Открыть Универсальный доступ";
+"menu.refresh" = "Обновить меню";
+"menu.check_updates" = "Проверить обновления...";
+"menu.quit" = "Завершить";
+
+"status.accessibility_granted" = "Универсальный доступ: выдан";
+"status.accessibility_not_granted" = "Универсальный доступ: не выдан";
+"status.hotkeys_needs_accessibility" = "Хоткеи: нужен Универсальный доступ";
+"status.hotkeys_active" = "Хоткеи: активны";
+"status.hotkeys_reconnecting" = "Хоткеи: переподключение";
+
+"settings.enable_accessibility" = "Включить Универсальный доступ";
+"settings.launch_at_login" = "Запускать при входе";
+"settings.show_status_icon" = "Показывать иконку в статус-баре";
+"settings.check_updates" = "Проверить обновления";
+"settings.quit" = "Закрыть полностью";
+"settings.start" = "Запустить";
+"settings.accessibility_granted" = "Универсальный доступ выдан";
+"settings.accessibility_not_granted" = "Универсальный доступ не выдан";
+"settings.universal_access" = "Универсальный доступ";
+"settings.shortcut" = "Сочетание клавиш";
+
+"updates.up_to_date.title" = "SLSwitch обновлен";
+"updates.up_to_date.message" = "Установлена %@.";
+"updates.available.notification" = "Доступен SLSwitch %@";
+"updates.check_failed.title" = "Не удалось проверить обновления";
+"updates.available.title" = "Доступен SLSwitch %@";
+"updates.available.message" = "Текущая версия: %@. Скачать установщик из GitHub Releases?";
+"updates.button.download" = "Скачать";
+"updates.button.open_release_page" = "Открыть релиз";
+"updates.button.later" = "Позже";
+"updates.download_failed.title" = "Не удалось скачать";
+"updates.error.empty_response" = "GitHub вернул пустой ответ.";
+"updates.error.installer_missing" = "В последнем релизе GitHub нет SLSwitch-Installer.dmg.";
+
+"notification.switched_by" = "Переключено через %@";

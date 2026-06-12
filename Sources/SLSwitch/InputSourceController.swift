@@ -9,7 +9,7 @@ struct InputSource: Equatable {
     }
 
     var localizedName: String {
-        raw.localizedName ?? "Unknown"
+        raw.localizedName ?? L10n.string("common.unknown")
     }
 
     var isSelected: Bool {
@@ -23,7 +23,7 @@ struct InputSource: Equatable {
 
 final class InputSourceController {
     func currentSourceName() -> String {
-        currentSelectableSource()?.localizedName ?? "Unknown"
+        currentSelectableSource()?.localizedName ?? L10n.string("common.unknown")
     }
 
     func selectNextSource() {
