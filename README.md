@@ -62,3 +62,7 @@ The installer is created at:
 ```text
 build/SLSwitch-Installer.dmg
 ```
+
+## License
+
+MIT License.
