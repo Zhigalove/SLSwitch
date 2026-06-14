@@ -32,6 +32,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         ModifierShortcut(id: "shift-command", name: "Shift + Command", flags: [.shift, .command]),
         ModifierShortcut(id: "shift-option", name: "Shift + Option", flags: [.shift, .option]),
         ModifierShortcut(id: "shift-control", name: "Shift + Control", flags: [.shift, .control]),
+        ModifierShortcut(id: "shift-function", name: "Shift + Fn", flags: [.shift, .function]),
     ]
     private var statusItem: NSStatusItem?
     private let inputSourceController = InputSourceController()

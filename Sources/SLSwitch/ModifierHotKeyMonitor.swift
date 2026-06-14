@@ -68,7 +68,7 @@ final class ModifierHotKeyMonitor {
     }
 
     private func normalized(flags: NSEvent.ModifierFlags) -> NSEvent.ModifierFlags {
-        flags.intersection([.shift, .control, .option, .command])
+        flags.intersection([.shift, .control, .option, .command, .function])
     }
 }
 
@@ -79,6 +79,7 @@ private extension NSEvent.ModifierFlags {
         if contains(.control) { count += 1 }
         if contains(.option) { count += 1 }
         if contains(.command) { count += 1 }
+        if contains(.function) { count += 1 }
         return count
     }
 }

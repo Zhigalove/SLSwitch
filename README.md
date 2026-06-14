@@ -7,7 +7,7 @@ SLSwitch is a small native macOS utility for switching keyboard input sources wi
 ## Features
 
 - Switch macOS input sources with familiar Windows-style shortcuts.
-- Choose one of three shortcuts: `Shift + Command`, `Shift + Option`, or `Shift + Control`.
+- Choose one of four shortcuts: `Shift + Command`, `Shift + Option`, `Shift + Control`, or `Shift + Fn`.
 
 ## Requirements
 
